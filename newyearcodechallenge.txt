@@ -1,0 +1,95 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Apr 30 12:47:30 2019
+
+@author: Deepa.Amasar
+"""
+
+
+
+''' Read input from STDIN. Print your output to STDOUT '''
+    #Use input() to read input from STDIN and use print to write your output to STDOUT
+import sys
+def main():
+
+# Write code here 
+    testCases = 1
+    while(testCases>0):        
+        strMax = ""
+        maxValue = -9999999999
+        testCases-=1
+        numberOfElements = 16
+        arr =[4, 5, 4, 3, 0, 0 ,0, -2, -3, -4, 0, -6, 4, 5, 4, 3]
+        dp = [0]*numberOfElements 
+        #maxDp = [""]*n
+        count = 0
+        for i in range(numberOfElements-1,-1,-1):
+            if(count==2):
+                break
+            
+            if(arr[i]>0):
+                count+=1
+                
+            dpname=[""]*numberOfElements
+            for j in range(i,-1,-1):
+                #print(strTemp)
+                if(arr[i]<=0):                    
+                    break
+                if(j==i or j==i-1):
+                    
+                    dp[j] = arr[i]
+                    if(j==i):                        
+                        dpname[j] = str(arr[i])
+                    else:
+                        dpname[j] = dpname[j+1]
+                else:
+                    dp[j]=max(dp[j+2],arr[j]+dp[j+2],dp[j+1])
+                    if(dp[j] == arr[j]+dp[j+2] and arr[j]!=0):                        
+                        dpname[j] = dpname[j+2]+","+str(arr[j])
+                    elif((dp[j] == arr[j]+dp[j+2]) and arr[j]==0):
+                        dpname[j] = dpname[j+2]
+                    else:
+                        dpname[j] = dpname[j+1]
+            if(arr[i]>0):
+                if(dp[j] > maxValue):
+                    strMax = dpname[j]
+                    maxValue = dp[j]
+                elif(dp[j] == maxValue):
+                    tempArr = dpname[j].split(',')
+                    maxArr = strMax.split(',')
+                
+                    m = 0
+                    n = 0                    
+                    while(m<len(tempArr) and n<len(maxArr)):                   
+                        if(int(tempArr[m]) > int(maxArr[n])):
+                            strMax = dpname[j]
+                            break
+                        elif(int(tempArr[m]) < int(maxArr[n])):
+                            break
+                        m+=1
+                        n+=1
+            #print("name in dp",dpname)
+            
+           
+        #print(dp)
+        
+        
+        maxArr = strMax.split(',')
+        output=''.join(maxArr)
+        if(output==''): 
+            print("0")
+        else:
+            print(output)
+
+
+def max(a,b,c):
+    max = a
+    if(b>max):
+        max=b
+    if(c>max):
+        max = c
+    return max
+
+
+
+main()
