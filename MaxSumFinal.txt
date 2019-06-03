@@ -1,0 +1,62 @@
+''' Read input from STDIN. Print your output to STDOUT '''
+    #Use input() to read input from STDIN and use print to write your output to STDOUT
+from operator import add
+
+    
+def main():
+	arr = [984   , 981 ,   976  ,  950   , 899  ,  890 ,   887  ,  885 ,   880   , 800 ,   798 ,   790  ,  777 ,   767 ,   750  ,
+          701 ,   697   , 688  ,  680  ,  678 ,   650  ,  599  ,  589   , 567  ,  550 ,   501  ,  9 ,   8  ,  7   , 6  ,  5  ,  4 ,   3   , 2 ,   1]
+	arr.sort()
+	m=len(arr)
+
+	dp = [0]*m
+	for i in range(m-1,-1,-1):
+		n = arr[i]	
+		mask = [0]*10
+		#print("parent",arr[i])
+		while(n>0):
+			rem = n%10
+			n = n//10			
+			mask[rem]=1
+		dp[i] = arr[i]+recSum(arr[:i],mask)
+	
+	maxVal=0	
+	for i in range(m):
+		if(maxVal<dp[i]):
+			maxVal = dp[i]
+	#print(dp)
+	print(maxVal)
+def validMask(mask,n):
+	while(n>0):
+		rem = n%10
+		n = n//10
+		if(mask[rem]>0):
+			return False
+	return True
+def max(a,b):
+	if(a>b):
+		return a
+	else:
+		return b
+def createMask(n):
+	tempMask = [0]*10
+	while(n>0):
+		rem = n%10
+		n = n//10
+		tempMask[rem]=1
+	return tempMask
+def recSum(arr,mask):
+	maxVal = 0
+	#print(arr,mask)
+	m = len(arr)
+	if(m==0):
+		return 0
+	for i in range(m-1,-1,-1):
+		valid = validMask(mask,arr[i])
+		if(valid == True):
+			tempMask =list( map(add,mask,createMask(arr[i]))) 
+			
+			maxVal = max(maxVal,arr[i]+recSum(arr[:i],tempMask))
+			
+	return maxVal
+main()
