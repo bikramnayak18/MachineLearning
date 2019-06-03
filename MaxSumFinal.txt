@@ -8,23 +8,18 @@ def main():
           701 ,   697   , 688  ,  680  ,  678 ,   650  ,  599  ,  589   , 567  ,  550 ,   501  ,  9 ,   8  ,  7   , 6  ,  5  ,  4 ,   3   , 2 ,   1]
 	arr.sort()
 	m=len(arr)
-
 	dp = [0]*m
+	masks = [[0]*10 for i in range(m)]
 	for i in range(m-1,-1,-1):
-		n = arr[i]	
-		mask = [0]*10
-		#print("parent",arr[i])
-		while(n>0):
-			rem = n%10
-			n = n//10			
-			mask[rem]=1
-		dp[i] = arr[i]+recSum(arr[:i],mask)
+		masks[i] = createMask(arr[i])
 	
+	for i in range(m-1,-1,-1):
+		dp[i] = arr[i]+recSum(arr[:i],masks[i],masks)	
 	maxVal=0	
 	for i in range(m):
 		if(maxVal<dp[i]):
 			maxVal = dp[i]
-	#print(dp)
+	
 	print(maxVal)
 def validMask(mask,n):
 	while(n>0):
@@ -45,17 +40,15 @@ def createMask(n):
 		n = n//10
 		tempMask[rem]=1
 	return tempMask
-def recSum(arr,mask):
-	maxVal = 0
-	#print(arr,mask)
+def recSum(arr,mask,masks):
+	maxVal = 0	
 	m = len(arr)
 	if(m==0):
 		return 0
 	for i in range(m-1,-1,-1):
 		valid = validMask(mask,arr[i])
 		if(valid == True):
-			tempMask =list( map(add,mask,createMask(arr[i]))) 
-			
+			tempMask =list( map(add,mask,masks[i])) 			
 			maxVal = max(maxVal,arr[i]+recSum(arr[:i],tempMask))
 			
 	return maxVal
