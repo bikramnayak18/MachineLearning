@@ -1,0 +1,78 @@
+''' Read input from STDIN. Print your output to STDOUT '''
+    #Use input() to read input from STDIN and use print to write your output to STDOUT
+from operator import add
+def main():
+    testCases =1 # int(input())
+    while(testCases>0):
+        testCases-=1
+        m =35 #int( input())
+        #boxes = input().split(' ')
+        boxes = [984   , 981 ,   976  ,  950   , 899  ,  890 ,   887  ,  885 ,   880   , 800 ,   798 ,   790  ,  777 ,   767 ,   750  ,
+          701 ,   697   , 688  ,  680  ,  678 ,   650  ,  599  ,  589   , 567  ,  550 ,   501  ,  9 ,   8  ,  7   , 6  ,  5  ,  4 ,   3   , 2 ,   1]
+        dp = [0]*m #ans: 2425  (950+777+688+4+3+2+1
+        boxes.sort()
+        maxVal = 0
+        rem = -1
+        duplicate  = False
+        valids = [[0]*10 for i in range(m)]
+        for i in range(m):
+            dp[i] =int( boxes[i])            
+            n = int( boxes[i])       
+            while(n>0):
+                rem = n%10
+                n=n//10            
+                valids[i][rem] = 1
+            #print("1st",int( boxes[i]))
+            maxJ=0 
+            validJ = [0]*10 
+            for j in range(i-1,-1,-1):
+                n = int( boxes[i])               
+                while(n>0):
+                    rem = n%10
+                    n=n//10
+                    if(valids[j][rem]>0):
+                        duplicate = True
+                        break
+                if(duplicate == True):
+                    duplicate = False
+                    continue
+                elif(maxJ<dp[j]):
+                    maxJ = dp[j]
+                    validJ = valids[j]
+            
+            dp[i] = maxJ+int(boxes[i])
+            valids[i] =list( map(add,  valids[i],  validJ) )
+                    
+        
+        maxVal = 0    
+        maxValids= [0]*10
+        duplicate = False
+        for i in range(len(dp)):
+            if(maxVal<dp[i]):
+                maxVal = dp[i]   
+                maxValids = valids[i] 
+        tempValids = [0]*10
+        print(maxValids)
+        for i in range(m-1,-1,-1):
+            n = int( boxes[i])               
+            while(n>0):
+                rem = n%10
+                n=n//10
+                if(maxValids[rem]>0):
+                    duplicate = True
+                    break
+                tempValids[rem] = 1
+            if(duplicate == True):
+                duplicate = False
+                continue
+            else:
+                maxVal+=boxes[i]
+                maxValids =list( map(add,  maxValids,  tempValids) )
+        print(maxVal)
+        print(maxValids)
+        print(boxes)
+
+main()
+
+
+
